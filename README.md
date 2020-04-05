@@ -15,7 +15,7 @@ In a big K8s megacluster running in the cloud multiple labeled (and/or tainted) 
 
 #### Exemplary definitions
 
-##### For Amazon Web Services
+* For Amazon Web Services
 
 ```yaml
 apiVersion: storage.k8s.io/v1
@@ -33,7 +33,7 @@ allowedTopologies:
     - eu-central-1
 ```
 
-##### For Google Cloud Platform
+* For Google Cloud Platform
 
 ```yaml
 apiVersion: storage.k8s.io/v1
