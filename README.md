@@ -304,7 +304,7 @@ helm install --namespace puppetserver --name puppetserver ./ -f values.yaml
 ```bash
 kubectl port-forward -n puppetserver svc/puppet 8140:8140 &
 
-echo '127.0.0.1 puppet' > ~/.tmp_puppet_hosts
+echo '127.0.0.1 puppet' > ~/.tmp_puppetserver_hosts_file
 export HOSTALIASES=~/.tmp_puppet_hosts
 
 docker run -dit --network host --name goofy_xtigyro --entrypoint /bin/bash puppet/puppet-agent
@@ -319,12 +319,14 @@ puppet agent -t --certname ubuntu-buggy_xtigyro
 exit
 docker rm -f buggy_xtigyro
 
-rm ~/.tmp_puppet_hosts
+rm ~/.tmp_puppetserver_hosts_file
 unset HOSTALIASES
 
-jobs | grep 'port-forward' | grep 'puppetserver
+jobs | grep 'port-forward' | grep 'puppetserver'
 # [1]+  Running                 kubectl port-forward -n puppetserver svc/puppet 8140:8140 &
 kill %[job_number_above]
+# or execute ¯¯¯\/
+## kill %$(jobs | grep 'port-forward' | grep 'puppetserver' | cut -d'+' -f1 | tr -d '[' | tr -d ']')
 ```
 
 ## Chart's Dev Team
