@@ -39,7 +39,7 @@ data:
     {{- if .Values.r10k.code.cronJob.restartPolicy }}
       {{- if eq .Values.r10k.code.cronJob.restartPolicy "OnFailure" }}
         if (( $? != 0 )); then
-          /bin/sh -c /r10k.cronjob.sh
+          /bin/sh -c /etc/puppetlabs/puppet/r10k-code/r10k.cronjob.sh
         fi
       {{- else if eq .Values.r10k.code.cronJob.restartPolicy "Never" }}
         # Never restart? No, this is a cron sidecar, we want this to run forever
@@ -52,7 +52,7 @@ data:
     apk add --update busybox-suid
     touch /tmp/script.log
     /usr/bin/crontab - <<'EOF'
-      {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /opt/r10k.cronjob.sh >> /var/log/script.log
+      {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k-code/r10k.cronjob.sh >> /var/log/script.log
     EOF
     crond
     tail -f /tmp/script.log

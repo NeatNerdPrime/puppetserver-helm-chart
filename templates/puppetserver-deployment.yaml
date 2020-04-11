@@ -55,6 +55,20 @@ spec:
               mkdir -p /etc/puppetlabs/puppet/manifests;
               mkdir -p /etc/puppetlabs/code/r10k_cache;
               chown -R puppet:puppet /etc/puppetlabs;
+            {{- if .Values.puppetserver.puppeturl }}
+              mkdir -p /etc/puppetlabs/puppet/r10k-code/
+              cp /etc/puppetlabs/puppet/configmap/r10k-code/r10k.entrypoint.sh /etc/puppetlabs/puppet/r10k-code/r10k.entrypoint.sh;
+              cp /etc/puppetlabs/puppet/configmap/r10k-code/r10k.cronjob.sh /etc/puppetlabs/puppet/r10k-code/r10k.cronjob.sh;
+              chown puppet:puppet /etc/puppetlabs/puppet/r10k-code/r10k.entrypoint.sh /etc/puppetlabs/puppet/r10k-code/r10k.cronjob.sh;
+              chmod +x /etc/puppetlabs/puppet/r10k-code/r10k.entrypoint.sh /etc/puppetlabs/puppet/r10k-code/r10k.cronjob.sh;
+            {{- end }}
+            {{- if .Values.hiera.hieradataurl }}
+              mkdir -p /etc/puppetlabs/puppet/r10k-hiera
+              cp /etc/puppetlabs/puppet/configmap/r10k-hiera/r10k.entrypoint.sh /etc/puppetlabs/puppet/r10k-hiera/r10k.entrypoint.sh;
+              cp /etc/puppetlabs/puppet/configmap/r10k-hiera/r10k.cronjob.sh /etc/puppetlabs/puppet/r10k-hiera/r10k.cronjob.sh;
+              chown puppet:puppet /etc/puppetlabs/puppet/r10k-hiera/r10k.entrypoint.sh /etc/puppetlabs/puppet/r10k-hiera/r10k.cronjob.sh;
+              chmod +x /etc/puppetlabs/puppet/r10k-hiera/r10k.entrypoint.sh /etc/puppetlabs/puppet/r10k-hiera/r10k.cronjob.sh;
+            {{- end }}
             {{- if .Values.hiera.config }}
               cp /etc/puppetlabs/puppet/configmap/hiera.yaml /etc/puppetlabs/puppet/hiera.yaml;
               chown puppet:puppet /etc/puppetlabs/puppet/hiera.yaml;
@@ -78,6 +92,22 @@ spec:
               mountPath: /etc/puppetlabs/code/
             - name: puppet-puppet-storage
               mountPath: /etc/puppetlabs/puppet/
+          {{- if .Values.puppetserver.puppeturl }}
+            - name: r10k-code-volume
+              mountPath: /etc/puppetlabs/puppet/configmap/r10k-code/r10k.cronjob.sh
+              subPath: r10k.cronjob.sh
+            - name: r10k-code-volume
+              mountPath: /etc/puppetlabs/puppet/configmap/r10k-code/r10k.entrypoint.sh
+              subPath: r10k.entrypoint.sh
+          {{- end }}
+          {{- if .Values.hiera.hieradataurl }}
+            - name: r10k-hiera-volume
+              mountPath: /etc/puppetlabs/puppet/configmap/r10k-hiera/r10k.cronjob.sh
+              subPath: r10k.cronjob.sh
+            - name: r10k-hiera-volume
+              mountPath: /etc/puppetlabs/puppet/configmap/r10k-hiera/r10k.entrypoint.sh
+              subPath: r10k.entrypoint.sh
+          {{- end }}
           {{- if .Values.puppetserver.multiCompilers.enabled }}
             - name: init-compilers-volume
               mountPath: /etc/puppetlabs/puppet/configmap/check_for_compilers.sh
@@ -135,8 +165,8 @@ spec:
               mountPath: /etc/puppetlabs/puppet/
             - name: puppet-serverdata-storage
               mountPath: /opt/puppetlabs/server/data/puppetserver/
-        {{- if .Values.puppetserver.puppeturl }}
         # r10k Code Sidecar
+        {{- if .Values.puppetserver.puppeturl }}
         - name: r10k-code
           image: "{{.Values.r10k.image}}:{{.Values.r10k.tag}}"
           imagePullPolicy: "{{.Values.r10k.pullPolicy}}"
@@ -148,7 +178,10 @@ spec:
             value: {{ $value }}
           {{- end }}
           command:
-            - /opt/r10k.entrypoint.sh
+            - /etc/puppetlabs/puppet/r10k-code/r10k.entrypoint.sh
+          securityContext:
+            runAsUser: 999   # "puppet" UID
+            runAsGroup: 999 # "puppet" GID
           volumeMounts:
           {{- with .Values.r10k.code.viaSsh.credentials }}
           {{- if or (.existingSecret) (and (.ssh.value) (.known_hosts.value)) }}
@@ -157,19 +190,15 @@ spec:
           {{- end }}
           {{- end }}
           - name: r10k-code-volume
-            mountPath: /opt/r10k.cronjob.sh
-            subPath: "r10k.cronjob.sh"
-          - name: r10k-code-volume
-            mountPath: /opt/r10k.entrypoint.sh
-            subPath: "r10k.entrypoint.sh"
+            mountPath: /opt/r10k-code/
           - name: r10k-code-volume
             mountPath: /etc/puppetlabs/puppet/r10k.yaml
             subPath: r10k.yaml
           - name: puppet-code-storage
             mountPath: /etc/puppetlabs/code/
         {{- end }}
-        {{- if .Values.hiera.hieradataurl }}
         # r10k Hiera Sidecar
+        {{- if .Values.hiera.hieradataurl }}
         - name: r10k-hiera
           image: "{{.Values.r10k.image}}:{{.Values.r10k.tag}}"
           imagePullPolicy: "{{.Values.r10k.pullPolicy}}"
@@ -181,7 +210,10 @@ spec:
             value: {{ $value }}
           {{- end }}
           command:
-            - /opt/r10k.entrypoint.sh
+            - /etc/puppetlabs/puppet/r10k-hiera/r10k.entrypoint.sh
+          securityContext:
+            runAsUser: 999   # "puppet" UID
+            runAsGroup: 999 # "puppet" GID
           volumeMounts:
           {{- with .Values.r10k.hiera.viaSsh.credentials }}
           {{- if or (.existingSecret) (and (.ssh.value) (.known_hosts.value)) }}
@@ -190,11 +222,7 @@ spec:
           {{- end }}
           {{- end }}
           - name: r10k-hiera-volume
-            mountPath: /opt/r10k.cronjob.sh
-            subPath: "r10k.cronjob.sh"
-          - name: r10k-hiera-volume
-            mountPath: /opt/r10k.entrypoint.sh
-            subPath: "r10k.entrypoint.sh"
+            mountPath: /opt/r10k-hiera/
           - name: r10k-hiera-volume
             mountPath: /etc/puppetlabs/puppet/r10k.yaml
             subPath: r10k.yaml
@@ -202,8 +230,6 @@ spec:
             mountPath: /etc/puppetlabs/code/
         {{- end }}
       securityContext:
-        runAsUser: 999   # "puppet" UID
-        runAsGroup: 999 # "puppet" GID
         fsGroup: 999   # "puppet" GID
       volumes:
         - name: puppet-code-storage
@@ -243,18 +269,22 @@ spec:
           configMap:
             name: {{ template "puppetserver.hiera.privateMap" . }}
       {{- end }}
-        - name: r10k-code-volume
-          configMap:
-            name: r10k-code-config
       {{- if or (.Values.r10k.code.viaSsh.credentials.existingSecret) (and (.Values.r10k.code.viaSsh.credentials.ssh.value) (.Values.r10k.code.viaSsh.credentials.known_hosts.value)) }}
         - name: r10k-code-secret
           secret:
             secretName: {{ template "r10k.code.secret" . }}
             defaultMode: 288 # = mode 0440
       {{- end }}
+      {{- if .Values.puppetserver.puppeturl }}
+        - name: r10k-code-volume
+          configMap:
+            name: r10k-code-config
+      {{- end }}
+      {{- if .Values.hiera.hieradataurl }}
         - name: r10k-hiera-volume
           configMap:
             name: r10k-hiera-config
+      {{- end }}
       {{- if or (.Values.r10k.hiera.viaSsh.credentials.existingSecret) (and (.Values.r10k.hiera.viaSsh.credentials.ssh.value) (.Values.r10k.hiera.viaSsh.credentials.known_hosts.value)) }}
         - name: r10k-hiera-secret
           secret:
