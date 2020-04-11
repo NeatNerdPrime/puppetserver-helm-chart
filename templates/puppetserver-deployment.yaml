@@ -195,6 +195,9 @@ spec:
             subPath: r10k.yaml
           - name: puppet-code-storage
             mountPath: /etc/puppetlabs/code/
+          - name: puppet-puppet-storage
+            mountPath: /etc/puppetlabs/puppet/
+
         {{- end }}
 
         # r10k Hiera Sidecar
@@ -226,6 +229,8 @@ spec:
             subPath: r10k.yaml
           - name: puppet-code-storage
             mountPath: /etc/puppetlabs/code/
+          - name: puppet-puppet-storage
+            mountPath: /etc/puppetlabs/puppet/
         {{- end }}
       securityContext:
         fsGroup: 999   # "puppet" GID
