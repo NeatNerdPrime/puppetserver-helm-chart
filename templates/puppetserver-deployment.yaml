@@ -93,18 +93,18 @@ spec:
           {{- if .Values.puppetserver.puppeturl }}
             - name: r10k-code-volume
               mountPath: /etc/puppetlabs/puppet/configmap/r10k_code_entrypoint.sh
-              subPath: r10k_entrypoint.sh
+              subPath: r10k_code_entrypoint.sh
             - name: r10k-code-volume
               mountPath: /etc/puppetlabs/puppet/configmap/r10k_code_cronjob.sh
-              subPath: r10k_cronjob.sh
+              subPath: r10k_code_cronjob.sh
           {{- end }}
           {{- if .Values.hiera.hieradataurl }}
             - name: r10k-hiera-volume
               mountPath: /etc/puppetlabs/puppet/configmap/r10k_hiera_entrypoint.sh
-              subPath: r10k_entrypoint.sh
+              subPath: r10k_hiera_entrypoint.sh
             - name: r10k-hiera-volume
               mountPath: /etc/puppetlabs/puppet/configmap/r10k_hiera_cronjob.sh
-              subPath: r10k_cronjob.sh
+              subPath: r10k_hiera_cronjob.sh
           {{- end }}
           {{- if .Values.puppetserver.multiCompilers.enabled }}
             - name: init-compilers-volume
