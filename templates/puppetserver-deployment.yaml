@@ -261,14 +261,9 @@ spec:
             secretName: {{ template "r10k.hiera.secret" . }}
             defaultMode: 288 # = mode 0440
       {{- end }}
-    {{- if (or (.Values.nodeSelector.allPods) (.Values.nodeSelector.commonStoragePods)) }}
+    {{- if .Values.nodeSelector }}
       nodeSelector:
-      {{- if (.Values.nodeSelector.allPods) }}
-        {{ toYaml .Values.nodeSelector.allPods | nindent 10 }}
-      {{- end }}
-      {{- if (.Values.nodeSelector.commonStoragePods) }}
-        {{ toYaml .Values.nodeSelector.commonStoragePods | nindent 10 }}
-      {{- end }}
+        {{ toYaml .Values.nodeSelector | nindent 10 }}
     {{- end }}
     {{- if .Values.affinity }}
       affinity:
