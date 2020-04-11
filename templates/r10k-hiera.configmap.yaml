@@ -16,7 +16,7 @@ data:
       :hiera_repo:
         remote: '{{.Values.hiera.hieradataurl}}'
         basedir: '/etc/puppetlabs/code/hiera-data'
-  r10k.cronjob.sh: |
+  r10k_hiera_cronjob.sh: |
     #!/bin/sh
     # not needed anymore, as crond handels this - .startingDeadlineSeconds: {{ .startingDeadlineSeconds }}
     # not needed anymore, as crond handels this - .activeDeadlineSeconds: {{ .activeDeadlineSeconds }}
@@ -47,7 +47,7 @@ data:
         # Always restart? Yes, this is a cron sidecar, we want this to run forever
       {{- end }}
     {{- end }}
-  r10k.entrypoint.sh: |
+  r10k_hiera_entrypoint.sh: |
     #!/bin/sh
     apk add --update busybox-suid
     touch /tmp/script.log
