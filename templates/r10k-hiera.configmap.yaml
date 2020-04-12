@@ -49,11 +49,8 @@ data:
     {{- end }}
   r10k_hiera_entrypoint.sh: |
     #!/bin/sh
-    apk add --update busybox-suid
-    touch /tmp/script.log
-    /usr/bin/crontab - <<'EOF'
-      {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh >> /var/log/script.log
+    cat > ~/.r10k_cron_sched <<'EOF'
+    {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh
     EOF
-    crond
-    tail -f /tmp/script.log
+    supercronic ~/.r10k_cron_sched
 {{- end }}
