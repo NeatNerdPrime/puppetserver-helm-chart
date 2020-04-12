@@ -34,7 +34,6 @@ data:
     echo $PPID > ~/.r10k_cronjob.pid
     # extra_args="{{ .Values.r10k.hiera.extraArgs }}"  # parsing yaml-maps to bash?
     /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile
-    echo $?
     rm ~/.r10k_cronjob.pid
     {{- if .Values.r10k.hiera.cronJob.restartPolicy }}
       {{- if eq .Values.r10k.hiera.cronJob.restartPolicy "OnFailure" }}
