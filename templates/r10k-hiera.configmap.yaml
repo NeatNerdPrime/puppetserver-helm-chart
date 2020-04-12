@@ -22,20 +22,20 @@ data:
     # not needed anymore, as crond handels this - .activeDeadlineSeconds: {{ .activeDeadlineSeconds }}
     {{- if .Values.r10k.hiera.cronJob.concurrencyPolicy }}
       {{- if eq .Values.r10k.hiera.cronJob.concurrencyPolicy "Forbid" }}
-        if [ -e /run/r10k.cronjob.pid ] && pgrep $(</run/r10k.cronjob.pid); then
+        if [ -e ~/.r10k_cronjob.pid ] && pgrep $(<~/.r10k_cronjob.pid); then
           exit 0
         fi
       {{- else if eq .Values.r10k.hiera.cronJob.concurrencyPolicy "Replace" }}
-        if [ -e /run/r10k.cronjob.pid ]; then
-          pkill $(</run/r10k.cronjob.pid)
+        if [ -e ~/.r10k_cronjob.pid ]; then
+          pkill $(<~/.r10k_cronjob.pid)
         fi
       {{- end }}
     {{- end }}
-    echo $PPID > /run/r10k.cronjob.pid
+    echo $PPID > ~/.r10k_cronjob.pid
     # extra_args="{{ .Values.r10k.hiera.extraArgs }}"  # parsing yaml-maps to bash?
     /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile
     echo $?
-    rm /run/r10k.cronjob.pid
+    rm ~/.r10k_cronjob.pid
     {{- if .Values.r10k.hiera.cronJob.restartPolicy }}
       {{- if eq .Values.r10k.hiera.cronJob.restartPolicy "OnFailure" }}
         if (( $? != 0 )); then
