@@ -49,8 +49,8 @@ data:
     {{- end }}
   r10k_code_entrypoint.sh: |
     #!/usr/bin/env sh
-    cat > ~/.r10k_cron_sched <<'EOF'
-    {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh
+    cat > ~/.r10k_code_crontab <<'EOF'
+    {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_code_cronjob.sh > ~/.r10k_code_cronjob.log
     EOF
-    supercronic ~/.r10k_cron_sched
+    supercronic -json ~/.r10k_code_crontab
 {{- end }}
