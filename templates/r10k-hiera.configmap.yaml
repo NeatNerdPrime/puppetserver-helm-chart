@@ -50,7 +50,7 @@ data:
   r10k_hiera_entrypoint.sh: |
     #!/usr/bin/env sh
     cat > ~/.r10k_hiera_crontab <<'EOF'
-    {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh > ~/.r10k_hiera_cronjob.log
+    {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh > ~/.r10k_hiera_cronjob.log 2>&1
     EOF
     supercronic -json ~/.r10k_hiera_crontab
 {{- end }}
