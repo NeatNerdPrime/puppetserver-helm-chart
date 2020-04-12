@@ -16,6 +16,7 @@ data:
       :puppet_repo:
         remote: '{{.Values.puppetserver.puppeturl}}'
         basedir: '/etc/puppetlabs/code/environments'
+
   r10k_code_cronjob.sh: |
     #!/usr/bin/env sh
     # not needed anymore, as crond handels this - .startingDeadlineSeconds: {{ .startingDeadlineSeconds }}
@@ -33,17 +34,7 @@ data:
     {{- end }}
     # extra_args="{{ .Values.r10k.code.extraArgs }}"  # parsing yaml-maps to bash?
     /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile
-    {{- if .Values.r10k.code.cronJob.restartPolicy }}
-      {{- if eq .Values.r10k.code.cronJob.restartPolicy "OnFailure" }}
-        if (( $? != 0 )); then
-          /bin/sh -c /etc/puppetlabs/puppet/r10k_code_cronjob.sh
-        fi
-      {{- else if eq .Values.r10k.code.cronJob.restartPolicy "Never" }}
-        # Never restart? No, this is a cron sidecar, we want this to run forever
-      {{- else if eq .Values.r10k.code.cronJob.restartPolicy "Always" }}
-        # Always restart? Yes, this is a cron sidecar, we want this to run forever
-      {{- end }}
-    {{- end }}
+
   r10k_code_entrypoint.sh: |
     #!/usr/bin/env sh
     cat > ~/.r10k_code_crontab <<'EOF'
