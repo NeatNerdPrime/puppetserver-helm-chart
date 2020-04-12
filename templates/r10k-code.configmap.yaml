@@ -31,10 +31,8 @@ data:
         fi
       {{- end }}
     {{- end }}
-    echo $PPID > ~/.r10k_cronjob.pid
     # extra_args="{{ .Values.r10k.code.extraArgs }}"  # parsing yaml-maps to bash?
     /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile
-    rm ~/.r10k_cronjob.pid
     {{- if .Values.r10k.code.cronJob.restartPolicy }}
       {{- if eq .Values.r10k.code.cronJob.restartPolicy "OnFailure" }}
         if (( $? != 0 )); then
