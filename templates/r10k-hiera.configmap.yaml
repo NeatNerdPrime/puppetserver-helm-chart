@@ -33,12 +33,22 @@ data:
       {{- end }}
     {{- end }}
     # extra_args="{{ .Values.r10k.hiera.extraArgs }}"  # parsing yaml-maps to bash?
-    /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile 2> ~/.r10k_hiera_cronjob.err > ~/.r10k_hiera_cronjob.out
+    echo $PPID > ~/.r10k_cronjob.pid
+    /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile > ~/.r10k_hiera_cronjob.out 2>&1
+    retVal=$?
+    if [ "$retVal" -e "0" ]; then
+      touch ~/.r10k_hiera_cronjob.success
+    else
+      rm ~/.r10k_hiera_cronjob.success
+    fi
+    rm ~/.r10k_cronjob.pid
+    exit $retVal
 
   r10k_hiera_entrypoint.sh: |
     #!/usr/bin/env sh
     cat > ~/.r10k_hiera_crontab <<'EOF'
     {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh
     EOF
+    tail -F ~/.r10k_hiera_cronjob.out &
     supercronic -json ~/.r10k_hiera_crontab
 {{- end }}

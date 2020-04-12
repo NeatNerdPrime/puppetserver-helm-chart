@@ -19,8 +19,6 @@ data:
 
   r10k_code_cronjob.sh: |
     #!/usr/bin/env sh
-    # not needed anymore, as crond handels this - .startingDeadlineSeconds: {{ .startingDeadlineSeconds }}
-    # not needed anymore, as crond handels this - .activeDeadlineSeconds: {{ .activeDeadlineSeconds }}
     {{- if .Values.r10k.code.cronJob.concurrencyPolicy }}
       {{- if eq .Values.r10k.code.cronJob.concurrencyPolicy "Forbid" }}
         if [ -e ~/.r10k_cronjob.pid ] && pgrep $(<~/.r10k_cronjob.pid); then
@@ -33,12 +31,22 @@ data:
       {{- end }}
     {{- end }}
     # extra_args="{{ .Values.r10k.code.extraArgs }}"  # parsing yaml-maps to bash?
-    /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile 2> ~/.r10k_code_cronjob.err > ~/.r10k_code_cronjob.out
+    echo $PPID > ~/.r10k_cronjob.pid
+    /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile > ~/.r10k_code_cronjob.out 2>&1
+    retVal=$?
+    if [ "$retVal" -e "0" ]; then
+      touch ~/.r10k_code_cronjob.success
+    else
+      rm ~/.r10k_code_cronjob.success
+    fi
+    rm ~/.r10k_cronjob.pid
+    exit $retVal
 
   r10k_code_entrypoint.sh: |
     #!/usr/bin/env sh
     cat > ~/.r10k_code_crontab <<'EOF'
     {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_code_cronjob.sh
     EOF
+    tail -F ~/.r10k_code_cronjob.out &
     supercronic -json ~/.r10k_code_crontab
 {{- end }}

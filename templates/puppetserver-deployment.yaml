@@ -195,7 +195,14 @@ spec:
             mountPath: /etc/puppetlabs/code/
           - name: puppet-puppet-storage
             mountPath: /etc/puppetlabs/puppet/
-
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-ec", "test -f ~/.r10k_code_cronjob.success"]
+            failureThreshold: 2
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
         {{- end }}
 
         # r10k Hiera Sidecar
@@ -229,6 +236,14 @@ spec:
             mountPath: /etc/puppetlabs/code/
           - name: puppet-puppet-storage
             mountPath: /etc/puppetlabs/puppet/
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-ec", "test -f ~/.r10k_hiera_cronjob.success"]
+            failureThreshold: 2
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 10
         {{- end }}
       securityContext:
         fsGroup: 999   # "puppet" GID
