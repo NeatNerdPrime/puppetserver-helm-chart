@@ -199,8 +199,8 @@ spec:
             exec:
               command: ["/bin/sh", "-ec", "test -f ~/.r10k_code_cronjob.success"]
             failureThreshold: 2
-            initialDelaySeconds: 10
-            periodSeconds: 30
+            initialDelaySeconds: 5
+            periodSeconds: 20
             successThreshold: 1
             timeoutSeconds: 10
         {{- end }}
