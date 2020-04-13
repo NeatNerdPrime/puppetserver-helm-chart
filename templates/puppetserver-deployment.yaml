@@ -163,7 +163,6 @@ spec:
               mountPath: /etc/puppetlabs/puppet/
             - name: puppet-serverdata-storage
               mountPath: /opt/puppetlabs/server/data/puppetserver/
-
         # r10k Code Sidecar
         {{- if .Values.puppetserver.puppeturl }}
         - name: r10k-code
@@ -204,7 +203,6 @@ spec:
             successThreshold: 1
             timeoutSeconds: 10
         {{- end }}
-
         # r10k Hiera Sidecar
         {{- if .Values.hiera.hieradataurl }}
         - name: r10k-hiera
@@ -240,8 +238,8 @@ spec:
             exec:
               command: ["/bin/sh", "-ec", "test -f ~/.r10k_hiera_cronjob.success"]
             failureThreshold: 2
-            initialDelaySeconds: 60
-            periodSeconds: 30
+            initialDelaySeconds: 5
+            periodSeconds: 20
             successThreshold: 1
             timeoutSeconds: 10
         {{- end }}

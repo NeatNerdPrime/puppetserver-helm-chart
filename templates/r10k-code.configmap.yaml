@@ -32,7 +32,7 @@ data:
     {{- end }}
     # extra_args="{{ .Values.r10k.code.extraArgs }}"  # parsing yaml-maps to bash?
     echo $PPID > ~/.r10k_cronjob.pid
-    /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile > ~/.r10k_code_cronjob.out 2>&1
+    /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile "$@" > ~/.r10k_code_cronjob.out 2>&1
     retVal=$?
     if [ "$retVal" -eq "0" ]; then
       touch ~/.r10k_code_cronjob.success > /dev/null 2>&1
@@ -46,8 +46,8 @@ data:
     #!/usr/bin/env sh
     touch ~/.r10k_code_cronjob.success > /dev/null 2>&1
     cat > ~/.r10k_code_crontab <<'EOF'
-    {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_code_cronjob.sh
+    {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_code_cronjob.sh "$@"
     EOF
     tail -F ~/.r10k_code_cronjob.out &
-    supercronic -json ~/.r10k_code_crontab
+    supercronic ~/.r10k_code_crontab
 {{- end }}

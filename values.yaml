@@ -128,7 +128,7 @@ r10k:
     #  - --verbose=debug2   # error, warn, notice, info, debug, debug1, debug2
     #  - --trace
     #  - --color
-    ## Additional puppetserver code container environment variables
+    ## Additional r10k code container environment variables
     extraEnv: {}
     viaSsh:
       credentials:
@@ -157,7 +157,7 @@ r10k:
       restartPolicy: Never
       startingDeadlineSeconds: 60
       activeDeadlineSeconds: 90
-    ## Additional r10k hiera container arguments
+    ## Additional r10k hiera container environment variables
     extraArgs: {}
     #  - --verbose=debug2   # error, warn, notice, info, debug, debug1, debug2
     #  - --trace
