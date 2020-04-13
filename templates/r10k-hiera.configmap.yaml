@@ -37,15 +37,16 @@ data:
     /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile > ~/.r10k_hiera_cronjob.out 2>&1
     retVal=$?
     if [ "$retVal" -eq "0" ]; then
-      touch ~/.r10k_code_cronjob.success > /dev/null 2>&1
+      touch ~/.r10k_hiera_cronjob.success > /dev/null 2>&1
     else
-      rm ~/.r10k_code_cronjob.success > /dev/null 2>&1
+      rm ~/.r10k_hiera_cronjob.success > /dev/null 2>&1
     fi
     rm ~/.r10k_cronjob.pid
     exit $retVal
 
   r10k_hiera_entrypoint.sh: |
     #!/usr/bin/env sh
+    touch ~/.r10k_hiera_cronjob.success > /dev/null 2>&1
     cat > ~/.r10k_hiera_crontab <<'EOF'
     {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh
     EOF
