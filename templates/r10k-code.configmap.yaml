@@ -19,26 +19,14 @@ data:
 
   r10k_code_cronjob.sh: |
     #!/usr/bin/env sh
-    {{- if .Values.r10k.code.cronJob.concurrencyPolicy }}
-      {{- if eq .Values.r10k.code.cronJob.concurrencyPolicy "Forbid" }}
-        if [ -e ~/.r10k_cronjob.pid ] && pgrep $(<~/.r10k_cronjob.pid); then
-          exit 0
-        fi
-      {{- else if eq .Values.r10k.code.cronJob.concurrencyPolicy "Replace" }}
-        if [ -e ~/.r10k_cronjob.pid ]; then
-          pkill $(<~/.r10k_cronjob.pid)
-        fi
-      {{- end }}
-    {{- end }}
-    echo $PPID > ~/.r10k_cronjob.pid
-    exec /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml --puppetfile {{ template "r10k.code.args" . }} > ~/.r10k_code_cronjob.out 2>&1
+    exec /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml \
+    --puppetfile {{ template "r10k.code.args" . }} > ~/.r10k_code_cronjob.out 2>&1
     retVal=$?
     if [ "$retVal" -eq "0" ]; then
       touch ~/.r10k_code_cronjob.success > /dev/null 2>&1
     else
       rm ~/.r10k_code_cronjob.success > /dev/null 2>&1
     fi
-    rm ~/.r10k_cronjob.pid
     exit $retVal
 
   r10k_code_entrypoint.sh: |
