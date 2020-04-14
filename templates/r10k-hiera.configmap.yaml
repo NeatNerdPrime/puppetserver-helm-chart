@@ -35,6 +35,6 @@ data:
     cat > ~/.r10k_hiera_crontab <<'EOF'
     {{ .Values.r10k.hiera.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh
     EOF
-    tail -Fq --retry ~/.r10k_hiera_cronjob.out &
+    tail -Fq ~/.r10k_hiera_cronjob.out &
     exec supercronic ~/.r10k_hiera_crontab
 {{- end }}
