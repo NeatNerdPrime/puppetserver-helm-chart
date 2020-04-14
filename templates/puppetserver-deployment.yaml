@@ -175,8 +175,7 @@ spec:
           - name: {{ $key }}
             value: {{ $value }}
           {{- end }}
-          command:
-            - /etc/puppetlabs/puppet/r10k_code_entrypoint.sh
+          command: [ "sh", "-c", "/etc/puppetlabs/puppet/r10k_code_entrypoint.sh" ]
           securityContext:
             runAsUser: 999   # "puppet" UID
             runAsGroup: 999 # "puppet" GID
@@ -215,8 +214,7 @@ spec:
           - name: {{ $key }}
             value: {{ $value }}
           {{- end }}
-          command:
-            - /etc/puppetlabs/puppet/r10k_hiera_entrypoint.sh
+          command: [ "sh", "-c", "/etc/puppetlabs/puppet/r10k_hiera_entrypoint.sh" ]
           securityContext:
             runAsUser: 999   # "puppet" UID
             runAsGroup: 999 # "puppet" GID
