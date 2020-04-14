@@ -227,10 +227,6 @@ Parameter | Description | Default
 `r10k.pullPolicy` | r10k img pull policy | `IfNotPresent`
 `r10k.affinity` | r10k pod assignment affinity |``
 `r10k.code.cronJob.schedule` | r10k control repo cron job schedule policy | `*/15 * * * *`
-`r10k.code.cronJob.concurrencyPolicy` | r10k control repo cron job concurrency policy | `Forbid`
-`r10k.code.cronJob.restartPolicy` | r10k control repo cron job restart policy | `Never`
-`r10k.code.cronJob.startingDeadlineSeconds` | r10k control repo cron job starting deadline | `500`
-`r10k.code.cronJob.activeDeadlineSeconds` | r10k control repo cron job active deadline | `750`
 `r10k.code.resources` | r10k control repo resource limits |``
 `r10k.code.extraArgs` | r10k control repo additional container env args |``
 `r10k.code.extraEnv` | r10k control repo additional container env vars |``
@@ -238,10 +234,6 @@ Parameter | Description | Default
 `r10k.code.viaSsh.credentials.known_hosts.value`| r10k control repo ssh known hosts file |``
 `r10k.code.viaSsh.credentials.existingSecret`| r10k control repo ssh secret that holds ssh key and known hosts files |``
 `r10k.hiera.cronJob.schedule` | r10k hiera data cron job schedule policy | `*/2 * * * *`
-`r10k.hiera.cronJob.concurrencyPolicy` | r10k control repo cron job concurrency policy | `Forbid`
-`r10k.hiera.cronJob.restartPolicy` | r10k control repo cron job restart policy | `Never`
-`r10k.hiera.cronJob.startingDeadlineSeconds` | r10k control repo cron job starting deadline | `500`
-`r10k.hiera.cronJob.activeDeadlineSeconds` | r10k control repo cron job active deadline | `750`
 `r10k.hiera.resources` | r10k hiera data resource limits |``
 `r10k.hiera.extraArgs` | r10k hiera data additional container env args |``
 `r10k.hiera.extraEnv` | r10k hiera data additional container env vars |``
