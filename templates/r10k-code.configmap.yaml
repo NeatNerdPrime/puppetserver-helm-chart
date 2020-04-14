@@ -35,6 +35,6 @@ data:
     cat > ~/.r10k_code_crontab <<'EOF'
     {{ .Values.r10k.code.cronJob.schedule }} /bin/sh -c /etc/puppetlabs/puppet/r10k_code_cronjob.sh
     EOF
-    tail -F ~/.r10k_code_cronjob.out &
+    tail -Fq --retry ~/.r10k_code_cronjob.out 2> /dev/null &
     exec supercronic ~/.r10k_code_crontab
 {{- end }}

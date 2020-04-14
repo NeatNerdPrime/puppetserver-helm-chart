@@ -5,6 +5,14 @@ numbering uses [semantic versioning](http://semver.org).
 
 NOTE: The change log until version `v0.2.4` is auto-generated.
 
+## [v3.1.0](https://github.com/Xtigyro/puppetserver-helm-chart/tree/v3.1.0) (2020-04-17)
+
+- Switch to r10k sidecar containers for Puppet and Hiera repos.
+- Improved documentation.
+- Small fixes.
+
+[Full Changelog](https://github.com/Xtigyro/puppetserver-helm-chart/compare/v3.0.0...v3.1.0)
+
 ## [v3.0.0](https://github.com/Xtigyro/puppetserver-helm-chart/tree/v3.0.0) (2020-04-05)
 
 - Helm v3 support.
