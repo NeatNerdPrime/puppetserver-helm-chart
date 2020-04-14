@@ -332,6 +332,6 @@ kill %[job_number_above]
 ## Chart's Dev Team
 
 * Lead Developer: Miroslav Hadzhiev (miroslav.hadzhiev@gmail.com)
-* Developer: Scott Cressi (scottcressi@gmail.com)
-* Developer: Morgan Rhodes (morgan@puppet.com)
 * Developer: Sean Conley (slconley@gmail.com)
+* Developer: Morgan Rhodes (morgan@puppet.com)
+* Developer: Scott Cressi (scottcressi@gmail.com)
