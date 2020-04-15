@@ -7,7 +7,7 @@ NOTE: The change log until version `v0.2.4` is auto-generated.
 
 ## [v3.1.0](https://github.com/Xtigyro/puppetserver-helm-chart/tree/v3.1.0) (2020-04-17)
 
-- Switch to r10k sidecar containers for Puppet and Hiera repos.
+- Switch to sidecar containers for r10k.
 - Improved documentation.
 - Small fixes.
 
