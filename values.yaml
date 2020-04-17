@@ -7,7 +7,7 @@
 puppetserver:
   name: puppetserver
   image: puppet/puppetserver
-  tag: 6.9.2
+  tag: 6.10.0
   pullPolicy: IfNotPresent
   ## Horizontal Scaling
   ## Optional deployment of multiple Puppet Server Compilers
