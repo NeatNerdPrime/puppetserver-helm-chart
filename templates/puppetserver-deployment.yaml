@@ -194,9 +194,6 @@ spec:
             mountPath: /home/puppet/.ssh
           {{- end }}
           {{- end }}
-          - name: r10k-code-volume
-            mountPath: /etc/puppetlabs/puppet/r10k.yaml
-            subPath: r10k.yaml
           - name: puppet-code-storage
             mountPath: /etc/puppetlabs/code/
           - name: puppet-puppet-storage
@@ -233,9 +230,6 @@ spec:
             mountPath: /home/puppet/.ssh
           {{- end }}
           {{- end }}
-          - name: r10k-hiera-volume
-            mountPath: /etc/puppetlabs/puppet/r10k.yaml
-            subPath: r10k.yaml
           - name: puppet-code-storage
             mountPath: /etc/puppetlabs/code/
           - name: puppet-puppet-storage
