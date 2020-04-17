@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "puppetserver.r10k.labels" . | nindent 4 }}
 data:
-  r10k.yaml: |
+  r10k_hiera.yaml: |
     # The location to use for storing cached Git repos
     :cachedir: '/etc/puppetlabs/code/r10k_cache'
     # A list of git repositories to create
@@ -19,7 +19,7 @@ data:
 
   r10k_hiera_cronjob.sh: |
     #!/usr/bin/env sh
-    exec /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k.yaml \
+    exec /docker-entrypoint.sh deploy environment --config /etc/puppetlabs/puppet/r10k_hiera.yaml \
     --puppetfile {{ template "r10k.hiera.args" . }} > ~/.r10k_hiera_cronjob.out 2>&1
     retVal=$?
     if [ "$retVal" -eq "0" ]; then

@@ -58,13 +58,15 @@ spec:
             {{- if .Values.puppetserver.puppeturl }}
               cp /etc/puppetlabs/puppet/configmap/r10k_code_entrypoint.sh /etc/puppetlabs/puppet/r10k_code_entrypoint.sh;
               cp /etc/puppetlabs/puppet/configmap/r10k_code_cronjob.sh /etc/puppetlabs/puppet/r10k_code_cronjob.sh;
-              chown puppet:puppet /etc/puppetlabs/puppet/r10k_code_entrypoint.sh /etc/puppetlabs/puppet/r10k_code_cronjob.sh;
+              cp /etc/puppetlabs/puppet/configmap/r10k_code.yaml /etc/puppetlabs/puppet/r10k_code.yaml;
+              chown puppet:puppet /etc/puppetlabs/puppet/r10k_code_entrypoint.sh /etc/puppetlabs/puppet/r10k_code_cronjob.sh /etc/puppetlabs/puppet/r10k_code.yaml;
               chmod +x /etc/puppetlabs/puppet/r10k_code_entrypoint.sh /etc/puppetlabs/puppet/r10k_code_cronjob.sh;
             {{- end }}
             {{- if .Values.hiera.hieradataurl }}
               cp /etc/puppetlabs/puppet/configmap/r10k_hiera_entrypoint.sh /etc/puppetlabs/puppet/r10k_hiera_entrypoint.sh;
               cp /etc/puppetlabs/puppet/configmap/r10k_hiera_cronjob.sh /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh;
-              chown puppet:puppet /etc/puppetlabs/puppet/r10k_hiera_entrypoint.sh /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh;
+              cp /etc/puppetlabs/puppet/configmap/r10k_hiera.yaml /etc/puppetlabs/puppet/r10k_hiera.yaml;
+              chown puppet:puppet /etc/puppetlabs/puppet/r10k_hiera_entrypoint.sh /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh /etc/puppetlabs/puppet/r10k_hiera.yaml;
               chmod +x /etc/puppetlabs/puppet/r10k_hiera_entrypoint.sh /etc/puppetlabs/puppet/r10k_hiera_cronjob.sh;
             {{- end }}
             {{- if .Values.hiera.config }}
@@ -97,6 +99,9 @@ spec:
             - name: r10k-code-volume
               mountPath: /etc/puppetlabs/puppet/configmap/r10k_code_cronjob.sh
               subPath: r10k_code_cronjob.sh
+            - name: r10k-code-volume
+              mountPath: /etc/puppetlabs/puppet/configmap/r10k_code.yaml
+              subPath: r10k_code.yaml
           {{- end }}
           {{- if .Values.hiera.hieradataurl }}
             - name: r10k-hiera-volume
@@ -105,6 +110,9 @@ spec:
             - name: r10k-hiera-volume
               mountPath: /etc/puppetlabs/puppet/configmap/r10k_hiera_cronjob.sh
               subPath: r10k_hiera_cronjob.sh
+            - name: r10k-code-volume
+              mountPath: /etc/puppetlabs/puppet/configmap/r10k_hiera.yaml
+              subPath: r10k_hiera.yaml
           {{- end }}
           {{- if .Values.puppetserver.multiCompilers.enabled }}
             - name: init-compilers-volume
@@ -200,7 +208,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 20
             successThreshold: 1
-            timeoutSeconds: 10
+            timeoutSeconds: 5
         {{- end }}
         # r10k Hiera Sidecar
         {{- if .Values.hiera.hieradataurl }}
@@ -239,7 +247,7 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 20
             successThreshold: 1
-            timeoutSeconds: 10
+            timeoutSeconds: 5
         {{- end }}
       securityContext:
         fsGroup: 999   # "puppet" GID
