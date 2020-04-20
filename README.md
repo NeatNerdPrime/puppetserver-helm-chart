@@ -145,7 +145,7 @@ Parameter | Description | Default
 --------- | ----------- | -------
 `puppetserver.name` | puppetserver component label | `puppetserver`
 `puppetserver.image` | puppetserver image | `puppet/puppetserver`
-`puppetserver.tag` | puppetserver img tag | `6.9.2`
+`puppetserver.tag` | puppetserver img tag | `6.10.0`
 `puppetserver.resources` | puppetserver resource limits | ``
 `puppetserver.extraEnv` | puppetserver additional container env vars |``
 `puppetserver.preGeneratedCertsJob.enabled` | puppetserver pre-generated certs |`false`
