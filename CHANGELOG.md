@@ -9,6 +9,7 @@ NOTE: The change log until version `v0.2.4` is auto-generated.
 
 - Switch to sidecar containers for r10k.
 - Various small improvements and fixes.
+- Shorter and further improved documentation.
 
 [Full Changelog](https://github.com/Xtigyro/puppetserver-helm-chart/compare/v3.0.0...v3.1.0)
 
