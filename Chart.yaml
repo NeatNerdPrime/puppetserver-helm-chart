@@ -10,13 +10,13 @@ icon: https://secure.gravatar.com/avatar/fdd009b7c1ec96e088b389f773e87aec.jpg?s=
 sources:
 - https://github.com/puppetlabs/pupperware/
 maintainers:
+- name: Pupperware Team
+  email: pupperware@puppet.com
+- name: underscorgan
+  email: morgan@puppet.com
 - name: Xtigyro
   email: miroslav.hadzhiev@gmail.com
 - name: slconley
   email: slconley@gmail.com
-- name: underscorgan
-  email: morgan@puppet.com
-- name: scottcressi
-  email: scottcressi@gmail.com
 engine: gotpl
 kubeVersion: ">=1.10.0-0"
