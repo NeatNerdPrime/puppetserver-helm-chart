@@ -254,23 +254,24 @@ helm install --namespace puppetserver --name puppetserver puppet/puppetserver-he
 ```bash
 kubectl port-forward -n puppetserver svc/puppet 8140:8140 &
 
-echo '127.0.0.1 puppet' > ~/.tmp_puppetserver_hosts_file
-export HOSTALIASES=~/.tmp_puppetserver_hosts_file
+TIME_NOW="$(date +"%Y%m%dT%H%M")"
+cp "/etc/hosts"{,.backup_"$TIME_NOW"}
+echo '127.0.0.1 puppet' >> /etc/hosts
 
 docker run -dit --network host --name goofy_xtigyro --entrypoint /bin/bash puppet/puppet-agent
 docker exec -it goofy_xtigyro bash
-puppet agent -t --certname ubuntu-goofy_xtigyro
+puppet agent -t --server puppet --masterport 8140 --test --certname ubuntu-goofy_xtigyro
 exit
 docker rm -f goofy_xtigyro
 
 docker run -dit --network host --name buggy_xtigyro --entrypoint /bin/bash puppet/puppet-agent
 docker exec -it buggy_xtigyro bash
-puppet agent -t --certname ubuntu-buggy_xtigyro
+puppet agent -t --server puppet --masterport 8140 --test --certname ubuntu-buggy_xtigyro
 exit
 docker rm -f buggy_xtigyro
 
-rm ~/.tmp_puppetserver_hosts_file
-unset HOSTALIASES
+yes | mv "/etc/hosts.backup_"$TIME_NOW"" "/etc/hosts"
+unset TIME_NOW
 
 jobs | grep 'port-forward' | grep 'puppetserver'
 # [1]+  Running                 kubectl port-forward -n puppetserver svc/puppet 8140:8140 &
